@@ -19,7 +19,7 @@ from products.models import Product
 from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
 
-
+        
 class UserSignupView(APIView):
     def post(self, request, format=None):
         email = request.data.get('email')
@@ -152,12 +152,14 @@ class DetailProfileView(APIView):
             return Response(serializer.errors, status=400)
     
 
-class Logout(APIView):
+class LogoutView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+
     def post(self, request):
-        pass  
+        request.auth.delete()
+        return Response({'message': 'Logged out successfully'}, status=200)
 
 
 

@@ -15,14 +15,13 @@ class User(AbstractUser, BaseModel):
     full_name = models.CharField(max_length = 200)
     email = models.EmailField(unique = True, max_length = 100)
     mobile_no = models.CharField(max_length = 15)
-    profileImg = models.ImageField(upload_to='images/', null=True, blank=True)
+    profileImg = models.URLField(null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = UserManager()
 
-    # def get_full_name(self):
-    #     return self.full_name.strip()
+
 
     def save(self, *args, **kwargs):
         if not self.full_name:
