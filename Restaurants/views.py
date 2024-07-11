@@ -6,23 +6,14 @@ from drf_yasg.utils import swagger_auto_schema
 # from rest_framework import viewsets
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
-from rest_framework.pagination import PageNumberPagination
 # from rest_framework.response import Response
 # from rest_framework.views import APIView
 # from drf_yasg import openapi
-
-
-class RestaurantsPagination(PageNumberPagination):
-    page_size = 10  # Number of items per page
-    page_size_query_param = 'page_size'
-    max_page_size = 10
-
-
-
+from .pagination import CustomPagination
 class RestaurantsViewSet(viewsets.ModelViewSet):
     queryset = Restaurants.objects.all().order_by('resName')
     serializer_class = RestaurantsSerializers
-    pagination_class = RestaurantsPagination
+    pagination_class = CustomPagination
 
 
 

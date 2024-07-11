@@ -40,14 +40,30 @@ class CartItemSerializer(serializers.ModelSerializer):
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
-    fullname = serializers.SerializerMethodField()
+    # fullname = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['fullname', 'email',  "profileImg", "mobile_no"]
+        fields = ['first_name', 'last_name', 'email',  "profileImg", "mobile_no"]
 
-    def get_fullname(self, obj):
-        return f"{obj.first_name} {obj.last_name}"    
+    # def get_fullname(self, obj):
+    #     return f"{obj.first_name} {obj.last_name}" 
+
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    otp = serializers.CharField(max_length=6)
+    new_password = serializers.CharField(write_only=True)
+    re_new_password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        if data['new_password'] != data['re_new_password']:
+            raise serializers.ValidationError("The two password fields didn't match.")
+        return data
+
 
     
     

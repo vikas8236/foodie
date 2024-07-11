@@ -12,7 +12,9 @@ class BaseModel(models.Model):
 
 class User(AbstractUser, BaseModel):
     username = None
-    full_name = models.CharField(max_length = 200)
+    # full_name = models.CharField(max_length = 200)
+    # first_name = models.CharField(max_length=100)
+    # last_name = models.CharField(max_length=100)
     email = models.EmailField(unique = True, max_length = 100)
     mobile_no = models.CharField(max_length = 15)
     profileImg = models.URLField(null=True, blank=True)
@@ -21,12 +23,10 @@ class User(AbstractUser, BaseModel):
     REQUIRED_FIELDS = []
     objects = UserManager()
 
-
-
-    def save(self, *args, **kwargs):
-        if not self.full_name:
-            self.full_name = f"{self.first_name} {self.last_name}".strip()
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if not self.full_name:
+    #         self.full_name = f"{self.first_name} {self.last_name}".strip()
+    #     super().save(*args, **kwargs)
 
     def __str__(self):
         return self.email

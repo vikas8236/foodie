@@ -2,7 +2,7 @@ from django.contrib import admin
 from user.models import User
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['id', 'email', 'full_name', 'mobile_no']
+    list_display = ['id', 'email', 'mobile_no']
     # readonly_fields = ('id',)
 
     # fieldsets = [

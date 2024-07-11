@@ -1,25 +1,26 @@
-from django.shortcuts import render
-from user.models import User, CartItem
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from user.serializers import UserSerializer, LoginSerializer, CartItemSerializer, CustomUserSerializer
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import SessionAuthentication, TokenAuthentication
-# from rest_framework_simplejwt.authentication import JWTAuthentication
-from django.contrib.auth import authenticate
 # from rest_framework_simplejwt.tokens import RefreshToken
 # from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 # from rest_framework_simplejwt.views import TokenObtainPairView
-
+# from rest_framework_simplejwt.authentication import JWTAuthentication
+from user.models import User, CartItem
+from rest_framework.views import APIView
 from rest_framework.response import Response
-
+from user.serializers import UserSerializer, LoginSerializer, CartItemSerializer, CustomUserSerializer, PasswordResetRequestSerializer, PasswordResetConfirmSerializer
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
+from django.core.mail import send_mail
+from rest_framework import generics, status
+from rest_framework.response import Response
+from .utils import generate_otp
+from django.core.cache import cache
+from django.contrib.auth import authenticate
 from .models import Cart
 from products.models import Product
 from rest_framework.authtoken.models import Token
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404   
 
-        
+# Register api
 class UserSignupView(APIView):
     def post(self, request, format=None):
         email = request.data.get('email')
@@ -41,7 +42,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-from .serializers import LoginSerializer
+
 #  Login api 
 class LoginView(APIView):
     def post(self, request):
@@ -67,7 +68,7 @@ class LoginView(APIView):
             return Response("Internal server error", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 
-
+# cartlist api
 class CartView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -93,6 +94,7 @@ class CartView(APIView):
         except CartItem.DoesNotExist:
             return Response({"detail": "Item not found in cart."}, status=status.HTTP_404_NOT_FOUND)
 
+# add-to-cart api
 class AddToCartView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -123,6 +125,8 @@ class AddToCartView(APIView):
         except Exception as e:
             return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
 
+
+# Profile api
 class DetailProfileView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -151,15 +155,67 @@ class DetailProfileView(APIView):
                 return Response(serializer.data)
             return Response(serializer.errors, status=400)
     
-
+# logout api
 class LogoutView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-
-
     def post(self, request):
         request.auth.delete()
         return Response({'message': 'Logged out successfully'}, status=200)
+    
+# reset-password api
+class PasswordResetRequestView(generics.GenericAPIView):
+    serializer_class = PasswordResetRequestSerializer
+  
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data['email']
+        
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({"detail": "No user is associated with this email address."}, status=status.HTTP_404_NOT_FOUND)
+        
+        otp = generate_otp()
+        print(otp)
+        # import pdb; pdb.set_trace()
+        cache.set(f'password_reset_otp_{email}', otp, timeout=60)
+      
+
+        subject = "Password Reset OTP"
+        message = f"Your OTP for password reset is {otp}."
+        send_mail(subject, message, 'admin@example.com', [email])
+
+        return Response({"detail": "OTP has been sent to your email."}, status=status.HTTP_200_OK)
+
+class PasswordResetConfirmView(generics.GenericAPIView):
+    serializer_class = PasswordResetConfirmSerializer
+
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data['email']
+        otp = serializer.validated_data['otp']
+        new_password = serializer.validated_data['new_password']
+        cached_otp = cache.get(f'password_reset_otp_{email}')
+
+        if cached_otp is None or cached_otp != otp:
+            return Response({"detail": "Invalid or expired OTP."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({"detail": "No user is associated with this email address."}, status=status.HTTP_404_NOT_FOUND)
+        
+        user.set_password(new_password)
+        user.save()
+
+        cache.delete(f'password_reset_otp_{email}')
+
+        return Response({"detail": "Password has been reset successfully."}, status=status.HTTP_200_OK)
+
 
 
 
