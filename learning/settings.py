@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'user',
     'products',
     'Restaurants',
+    'payment',
     'rest_framework',
     'rest_framework.authtoken',
     'django_otp',
