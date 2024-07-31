@@ -66,8 +66,6 @@ urlpatterns = [
     path('user/', include(('user.urls', 'user'), namespace='user')),
     path('products/', include(('products.urls', 'products'), namespace='products')),
     path('restaurants/', include(('Restaurants.urls', 'Restaurants'), namespace='restaurants')),
-    path('payment/', include('payment.urls')),
-    
 
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
