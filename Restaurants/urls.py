@@ -1,22 +1,13 @@
-from .views import RestaurantsViewSet
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from django.conf import settings
-from django.conf.urls.static import static
-from rest_framework import routers
 
-
-router = DefaultRouter()
-router.register(r'', RestaurantsViewSet)
+from django.urls import path
+from .views import (
+    RestaurantListCreateAPIView,
+    RestaurantRetrieveUpdateDestroyAPIView,
+    MenuItemListCreateAPIView
+)
 
 urlpatterns = [
-    path('restaurants/', include(router.urls)),
-    # path('restaurants/', RestaurantsViewSet.as_view(), name = "create-restuarants"),
-    
-    # path('restaurants/<int:pk>', RestaurantUpdateView.as_view(), name = "detail-view")
-    
+    path('restaurants/', RestaurantListCreateAPIView.as_view(), name='restaurant-list-create'),
+    path('restaurants/<int:pk>/', RestaurantRetrieveUpdateDestroyAPIView.as_view(), name='restaurant-detail'),
+    path('restaurants/<int:restaurant_id>/menu_items/', MenuItemListCreateAPIView.as_view(), name='menuitem-list-create'),
 ]
-
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 

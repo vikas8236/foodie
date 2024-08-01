@@ -1,111 +1,53 @@
-# from django.shortcuts import render
 
-from .models import Restaurants
-from .serializers import RestaurantsSerializers
-from drf_yasg.utils import swagger_auto_schema
-# from rest_framework import viewsets
-from django.shortcuts import get_object_or_404
-from rest_framework import status, viewsets
+# from rest_framework import generics, status
 # from rest_framework.response import Response
 # from rest_framework.views import APIView
-# from drf_yasg import openapi
-from .pagination import CustomPagination
-class RestaurantsViewSet(viewsets.ModelViewSet):
-    queryset = Restaurants.objects.all().order_by('resName')
-    serializer_class = RestaurantsSerializers
-    pagination_class = CustomPagination
+# from .models import Restaurant, MenuItem
+# from .serializers import RestaurantSerializer, MenuItemSerializer
 
+# class RestaurantListCreateAPIView(generics.ListCreateAPIView):
+#     queryset = Restaurant.objects.all()
+#     serializer_class = RestaurantSerializer
 
+# class RestaurantRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Restaurant.objects.all()
+#     serializer_class = RestaurantSerializer
 
+# class MenuItemListCreateAPIView(generics.ListCreateAPIView):
+#     queryset = MenuItem.objects.all()
+#     serializer_class = MenuItemSerializer
 
+#     def get_queryset(self):
+#         restaurant_id = self.kwargs['restaurant_id']
+#         return MenuItem.objects.filter(restaurant_id=restaurant_id)
 
-# class RestaurantsCreateView(APIView):
+#     def perform_create(self, serializer):
+#         restaurant_id = self.kwargs['restaurant_id']
+#         restaurant = Restaurant.objects.get(id=restaurant_id)
+#         serializer.save(restaurant=restaurant)
 
-#  ******************code if you want to add multiple entries of data in a single request*****************
-#     @swagger_auto_schema(request_body=RestaurantsSerializers)
-#     def post(self, request):
-#         # Check if request data is a list
-#         if isinstance(request.data, list):
-#             serializer = RestaurantsSerializers(data=request.data, many=True)
-#         else:
-#             serializer = RestaurantsSerializers(data=[request.data], many=True)
-        
-#         # Validate and save data
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-#     @swagger_auto_schema(
-#         responses={200: openapi.Response("Success", RestaurantsSerializers(many=True))},
-#     )
-#     def get(self, request):
-#         restaurants = Restaurants.objects.all()
-#         serializer = RestaurantsSerializers(restaurants, many=True)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
+# your_app/views.py
 
+from rest_framework import generics
+from .models import Restaurant, MenuItem
+from .serializers import RestaurantSerializer, MenuItemSerializer
 
-# # class RestaurantUpdateView(APIView):
-#     # @swagger_auto_schema(responses={200: openapi.Response("Success", RestaurantsSerializers(many = False))},)  
-#     # def get(self, request, pk):
-#     #     restaurant = get_object_or_404(Restaurants, pk)
-#     #     serializer = RestaurantsSerializers(restaurant, many = False)
-#     #     return Response(serializer.data, status=status.HTTP_200_OK)
+class RestaurantListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Restaurant.objects.all()
+    serializer_class = RestaurantSerializer
 
-    
-#     @swagger_auto_schema(
-#         request_body=RestaurantsSerializers,
-#         responses={200: openapi.Response("Success", RestaurantsSerializers)},
-#     )
-#     def put(self, request, pk):
-#         restaurant = get_object_or_404(Restaurants, pk=pk)
-#         serializer = RestaurantsSerializers(restaurant, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_200_OK)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-#     @swagger_auto_schema(
-#         request_body=RestaurantsSerializers,
-#         responses={200: openapi.Response("Success", RestaurantsSerializers)},
-#     )
-#     def patch(self, request, pk):
-#         restaurant = get_object_or_404(Restaurants, pk=pk)
-#         serializer = RestaurantsSerializers(restaurant, data=request.data, partial=True)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_200_OK)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-#     @swagger_auto_schema(
-#         responses={204: "No Content"},
-#     )
-#     def delete(self, request, pk):
-#         restaurant = get_object_or_404(Restaurants, pk=pk)
-#         restaurant.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
+class RestaurantRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Restaurant.objects.all()
+    serializer_class = RestaurantSerializer
 
-    
-   
-      
-#     # @swagger_auto_schema(
-#     #     responses={200: openapi.Response("Success", RestaurantsSerializers)},
-#     # )
-#     # def get_object(self, pk):
-#     #     return get_object_or_404(Restaurants, pk=pk)
+class MenuItemListCreateAPIView(generics.ListCreateAPIView):
+    serializer_class = MenuItemSerializer
 
+    def get_queryset(self):
+        restaurant_id = self.kwargs['restaurant_id']
+        return MenuItem.objects.filter(restaurant_id=restaurant_id)
 
-# # class RestaurantDetailView(APIView):
-# #     @swagger_auto_schema(
-# #         responses={200: openapi.Response("Success", RestaurantsSerializers)},
-# #     )
-
-# #     def get_object(self, pk):
-# #         return get_object_or_404(Restaurants, pk)
-# #     def get(self, request, pk):
-# #         restaurant = self.get_object(pk)
-# #         serializer = RestaurantsSerializers(restaurant)
-# #         return Response(serializer.data, status=status.HTTP_200_OK)
-    
-
-
+    def perform_create(self, serializer):
+        restaurant_id = self.kwargs['restaurant_id']
+        restaurant = Restaurant.objects.get(id=restaurant_id)
+        serializer.save(restaurant=restaurant)
