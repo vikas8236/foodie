@@ -10,9 +10,17 @@ from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
 from user.models import User
 from products.models import Product
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class VoiceHelpAPIView(View):
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,      
+        ),
+        responses={201: 'Created'}
+    )
     def post(self, request, *args, **kwargs):
         to_phone = request.POST.get('to')
         if not to_phone:
@@ -31,6 +39,12 @@ class VoiceHelpAPIView(View):
 class VoiceResponseAPIView(View):
     def get(self, request, *args, **kwargs):
         return self.handle_voice_response(request)
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,      
+        ),
+        responses={201: 'Created'}
+    )
 
     def post(self, request, *args, **kwargs):
         return self.handle_voice_response(request)
@@ -48,6 +62,12 @@ class VoiceResponseAPIView(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ReceiveMobileNumberAPIView(View):
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,      
+        ),
+        responses={201: 'Created'}
+    )
     def post(self, request, *args, **kwargs):
         mobile_no = request.POST.get('Digits')
         response = VoiceResponse()
@@ -77,6 +97,12 @@ class ReceiveMobileNumberAPIView(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ProcessResponseAPIView(View):
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,      
+        ),
+        responses={201: 'Created'}
+    )
     def post(self, request, *args, **kwargs):
         digit = request.POST.get('Digits')
         response = VoiceResponse()
@@ -147,6 +173,12 @@ class ProcessResponseAPIView(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ReceiveProductSelectionAPIView(View):
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,      
+        ),
+        responses={201: 'Created'}
+    )
     def post(self, request, *args, **kwargs):
         product_selection = request.POST.get('Digits')
         response = VoiceResponse()
@@ -163,8 +195,9 @@ class ReceiveProductSelectionAPIView(View):
             '3': 'Kebabs',
             '4': 'Paratha',
             '5': 'Pav Bhaji',
-            '6': 'Burger',
+            '6': 'pizza',
             '7': 'Ice Cream',
+            '8': 'rasgulla',
         }
 
         product_name = product_mapping.get(product_selection)
@@ -187,6 +220,12 @@ class ReceiveProductSelectionAPIView(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ReceiveQuantityAPIView(View):
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,      
+        ),
+        responses={201: 'Created'}
+    )
     def post(self, request, *args, **kwargs):
         quantity = request.POST.get('Digits')
         product_name = request.session.pop('product_name', None)

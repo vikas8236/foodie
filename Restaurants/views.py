@@ -25,9 +25,6 @@
 #         restaurant_id = self.kwargs['restaurant_id']
 #         restaurant = Restaurant.objects.get(id=restaurant_id)
 #         serializer.save(restaurant=restaurant)
-
-# your_app/views.py
-
 from rest_framework import generics
 from .models import Restaurant, MenuItem
 from .serializers import RestaurantSerializer, MenuItemSerializer

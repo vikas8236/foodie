@@ -1,18 +1,23 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-# from rest_framework.permissions import IsAuthenticated
 from .models import Product
 from .serializers import ProductSerializer
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 class ProductListView(APIView):
-    # permission_classes = [IsAuthenticated]
-
     def get(self, request):
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
 
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,      
+        ),
+        responses={201: 'Created'}
+    )
     def post(self, request):
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():

@@ -18,10 +18,18 @@ from django.contrib.auth import authenticate
 from .models import Cart
 from products.models import Product
 from rest_framework.authtoken.models import Token
-from django.shortcuts import get_object_or_404   
+from django.shortcuts import get_object_or_404  
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi 
 
 # Register api
 class UserSignupView(APIView):
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,      
+        ),
+        responses={201: 'Created'}
+    )
     def post(self, request, format=None):
         email = request.data.get('email')
         try:
@@ -45,6 +53,12 @@ logger = logging.getLogger(__name__)
 
 #  Login api 
 class LoginView(APIView):
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,      
+        ),
+        responses={201: 'Created'}
+    )
     def post(self, request):
         try:
             serializer = LoginSerializer(data=request.data)
@@ -81,7 +95,12 @@ class CartView(APIView):
         cart_items = self.get_queryset()
         serializer = CartItemSerializer(cart_items, many=True)
         return Response(serializer.data)
-
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,      
+        ),
+        responses={204: 'Deleted'}
+    )
     def delete(self, request, pk):
         user = request.user
         try:
@@ -98,7 +117,12 @@ class CartView(APIView):
 class AddToCartView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,      
+        ),
+        responses={201: 'Created'}
+    )
     def post(self, request):
         try:
             product_id = request.data.get('product_id')
@@ -138,7 +162,12 @@ class DetailProfileView(APIView):
             user = self.get_object()
             serializer = CustomUserSerializer(user)
             return Response(serializer.data)
-
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,      
+        ),
+        responses={203: 'Updated'}
+    )
     def put(self, request):
             user = self.get_object()
             serializer = CustomUserSerializer(user, data=request.data)
@@ -146,7 +175,12 @@ class DetailProfileView(APIView):
                 serializer.save()
                 return Response(serializer.data)
             return Response(serializer.errors, status=400)
-    
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,      
+        ),
+        responses={203: 'Updated'}
+    )
     def patch(self, request):
             user = self.get_object()
             serializer = CustomUserSerializer(user, data=request.data, partial = True)
@@ -159,6 +193,12 @@ class DetailProfileView(APIView):
 class LogoutView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,      
+        ),
+        responses={201: 'Created'}
+    )
     def post(self, request):
         request.auth.delete()
         return Response({'message': 'Logged out successfully'}, status=200)
@@ -166,7 +206,12 @@ class LogoutView(APIView):
 # reset-password api
 class PasswordResetRequestView(generics.GenericAPIView):
     serializer_class = PasswordResetRequestSerializer
-  
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,      
+        ),
+        responses={201: 'Created'}
+    )
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -192,7 +237,12 @@ class PasswordResetRequestView(generics.GenericAPIView):
 class PasswordResetConfirmView(generics.GenericAPIView):
     serializer_class = PasswordResetConfirmSerializer
 
-
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,      
+        ),
+        responses={201: 'Created'}
+    )
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)

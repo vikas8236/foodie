@@ -16,6 +16,18 @@ TWILIO_ACCOUNT_SID = config('TWILIO_ACCOUNT_SID')
 TWILIO_AUTH_TOKEN = config('TWILIO_AUTH_TOKEN')
 TWILIO_PHONE_NUMBER = config('TWILIO_PHONE_NUMBER')
 
+#Celery settings
+CELERY_BROKER_URL = 'redis://redis:6379/0' 
+# CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+CELERYD_HIJACK_ROOT_LOGGER = False
+CELERYD_LOG_LEVEL = 'DEBUG'
+
+
 # Django settings
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = True
@@ -24,10 +36,10 @@ ALLOWED_HOSTS = ['*']
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
-    'https://e48d-103-180-81-98.ngrok-free.app',
+    'https://5075-103-180-81-98.ngrok-free.app',
 ]
 CSRF_TRUSTED_ORIGINS = [
-    'https://e48d-103-180-81-98.ngrok-free.app',
+    'https://5075-103-180-81-98.ngrok-free.app',
 ]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
@@ -58,6 +70,7 @@ INSTALLED_APPS = [
     'payment',
     'voice',
     'search',
+    'testcelery',
     'rest_framework',
     'rest_framework.authtoken',
     'drf_yasg',
@@ -109,7 +122,7 @@ DATABASES = {
         'NAME': config('POSTGRES_DB'),
         'USER': config('POSTGRES_USER'),
         'PASSWORD': config('POSTGRES_PASSWORD'),
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': config('POSTGRES_PORT'),
     }
 }
@@ -161,6 +174,8 @@ CACHES = {
     }
 }
 
+
+
 # DRF settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -169,9 +184,14 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': None,
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+    ),
 }
 
-# Uncomment if using JWT
+
 # SIMPLE_JWT = {
 #     'JWT_EXPIRATION_DELTA': timedelta(days=7),
 #     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),

@@ -7,13 +7,20 @@ from rest_framework.authentication import TokenAuthentication
 import stripe
 from .models import Payment
 from .serializers import PaymentSerializer
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 class StripeWebhookView(APIView):
     permission_classes = [AllowAny]
-
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,      
+        ),
+        responses={201: 'Created'}
+    )
     def post(self, request, *args, **kwargs):
         payload = request.body
         sig_header = request.META.get('HTTP_STRIPE_SIGNATURE',None)
@@ -60,7 +67,12 @@ class StripeWebhookView(APIView):
 class StripeCheckoutView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
-
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,      
+        ),
+        responses={201: 'Created'}
+    )
     def post(self, request, *args, **kwargs):
         try:
             # Create a PaymentIntent on Stripe
