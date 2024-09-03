@@ -70,7 +70,7 @@ INSTALLED_APPS = [
     'payment',
     'voice',
     'search',
-    'testcelery',
+    # 'testcelery',
     'rest_framework',
     'rest_framework.authtoken',
     'drf_yasg',
