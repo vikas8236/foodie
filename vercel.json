@@ -1,27 +1,16 @@
+
 {
   "version": 2,
   "builds": [
     {
-      "src": "learning/wsgi.py",
-      "use": "@vercel/python",
-      "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
-    },
-    {
-        "src": "build_files.sh",
-        "use": "@vercel/static-build",
-        "config": {
-            "distDir": "staticfiles_build"
-        }
+      "src": "Dockerfile",
+      "use": "@vercel/docker"
     }
   ],
   "routes": [
     {
-      "src": "/static/(.*)",
-      "dest": "learning/$1"
-    },
-    {
       "src": "/(.*)",
-      "dest": "learning/wsgi.py"
+      "dest": "/"
     }
   ]
 }
