@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import dj_database_url
 from datetime import timedelta
 import logging.config
 from decouple import config
@@ -119,13 +120,35 @@ WSGI_APPLICATION = 'learning.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('POSTGRES_DB'),
-        'USER': config('POSTGRES_USER'),
-        'PASSWORD': config('POSTGRES_PASSWORD'),
-        'HOST': 'db',
-        'PORT': config('POSTGRES_PORT'),
+        'NAME': 'foodie_g3ta',
+        'USER': 'foodie_g3ta_user',
+        'PASSWORD': 'LdmKtrzxVipkPy9u6uVxUUs7rheOANs9',
+        'HOST': 'dpg-crc1g1i3esus7395ik1g-a.oregon-postgres.render.com',
+        'PORT': '5432',
+        'OPTIONS': {
+            'sslmode': 'require', 
+        },
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': config('POSTGRES_DB'),
+#         'USER': config('POSTGRES_USER'),
+#         'PASSWORD': config('POSTGRES_PASSWORD'),
+#         'HOST': 'localhost', # for docker use 'db' instead of 'localhost' 
+#         'PORT': config('POSTGRES_PORT'),
+#     }
+# }
+
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default=config('DATABASE_URL')
+#     )
+# }
+
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
