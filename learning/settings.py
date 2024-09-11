@@ -37,10 +37,10 @@ ALLOWED_HOSTS = ['*']
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
-    'https://5075-103-180-81-98.ngrok-free.app',
+    'https://foodie-git-main-vikas8236s-projects.vercel.app/',
 ]
 CSRF_TRUSTED_ORIGINS = [
-    'https://5075-103-180-81-98.ngrok-free.app',
+    'https://foodie-git-main-vikas8236s-projects.vercel.app/',
 ]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
