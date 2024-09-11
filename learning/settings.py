@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     'django_otp',
     'django_otp.plugins.otp_totp',
     'rest_framework_simplejwt',
+    
 ]
 
 ASGI_APPLICATION = 'learning.asgi.application'
