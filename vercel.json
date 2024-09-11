@@ -17,7 +17,7 @@
   "routes": [
     {
       "src": "/static/(.*)",
-      "dest": "learning/$1"
+      "dest": "staticfiles_build/$1"
     },
     {
       "src": "/(.*)",
@@ -25,3 +25,4 @@
     }
   ]
 }
+
