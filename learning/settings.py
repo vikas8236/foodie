@@ -37,10 +37,10 @@ ALLOWED_HOSTS = ['*']
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
-    'https://foodie-git-main-vikas8236s-projects.vercel.app/',
+    'https://foodie-eight-ruby.vercel.app',
 ]
 CSRF_TRUSTED_ORIGINS = [
-    'https://foodie-git-main-vikas8236s-projects.vercel.app/',
+    'https://foodie-eight-ruby.vercel.app',
 ]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
@@ -117,20 +117,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'learning.wsgi.application'
 
-# Database settings
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'foodie_g3ta',
-#         'USER': 'foodie_g3ta_user',
-#         'PASSWORD': 'LdmKtrzxVipkPy9u6uVxUUs7rheOANs9',
-#         'HOST': 'dpg-crc1g1i3esus7395ik1g-a.oregon-postgres.render.com',
-#         'PORT': '5432',
-#         'OPTIONS': {
-#             'sslmode': 'require', 
-#         },
-#     }
-# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
