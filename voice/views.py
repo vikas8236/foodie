@@ -112,7 +112,7 @@ class ProcessResponseAPIView(View):
             response.say(f"You selected to know the list of available foods. {product_list}")
         
         elif digit == '2':   
-            response.say("You selected to add foods to your cart. Press 1 for Biriyani, Press 2 for Cakes., press 3 for kebabs, 4 for paratha, press 5 for pav bhaji, press 6 for burger, press 7 for ice cream")
+            response.say("You selected to add foods to your cart. Press 1 for Biriyani, Press 2 for Cakes., press 3 for noodles, 4 for paratha, press 5 for chhole Bhature, press 6 for rasgulla, press 7 for desserts")
             response.gather(
                 numDigits=1,
                 action='/voice/receive-product-selection/',
@@ -120,7 +120,7 @@ class ProcessResponseAPIView(View):
             )
         
         elif digit == '3':
-            response.say(" You selected to retrieve your cart,Retrieving your cart...")
+            response.say(" You selected to retrieve your cart, Retrieving your cart...")
             cart_contents = self.view_cart(request)
             response.say(f"Your cart contains: {cart_contents}")
             
