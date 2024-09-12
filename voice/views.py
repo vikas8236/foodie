@@ -192,12 +192,11 @@ class ReceiveProductSelectionAPIView(View):
         product_mapping = {
             '1': 'Biriyani',
             '2': 'Cake',
-            '3': 'Kebabs',
+            '3': 'noodles',
             '4': 'Paratha',
-            '5': 'Pav Bhaji',
-            '6': 'pizza',
-            '7': 'Ice Cream',
-            '8': 'rasgulla',
+            '5': 'Chhoole Bhatoore',
+            '6': 'Rasgulla',
+            '7': 'Desserts',   
         }
 
         product_name = product_mapping.get(product_selection)

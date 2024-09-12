@@ -31,7 +31,7 @@ CELERYD_LOG_LEVEL = 'DEBUG'
 
 # Django settings
 SECRET_KEY = config('SECRET_KEY')
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ['*']
 
 # CORS settings
@@ -121,11 +121,11 @@ WSGI_APPLICATION = 'learning.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'foodie_g3ta',
-        'USER': 'foodie_g3ta_user',
-        'PASSWORD': 'LdmKtrzxVipkPy9u6uVxUUs7rheOANs9',
-        'HOST': 'dpg-crc1g1i3esus7395ik1g-a.oregon-postgres.render.com',
-        'PORT': '5432',
+        'NAME': config('POSTGRES_DB'),
+        'USER': config('POSTGRES_USER'),
+        'PASSWORD': config('POSTGRES_PASSWORD'),
+        'HOST': config('POSTGRES_HOST'), 
+        'PORT': config('POSTGRES_PORT'),
         },
     }
 
