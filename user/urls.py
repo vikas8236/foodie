@@ -10,6 +10,7 @@ urlpatterns = [
     path('add-to-cart/', AddToCartView.as_view(), name='add-to-cart'),
     path('cart/', CartView.as_view(), name='cart-list'),
     path('cart/<int:pk>/', CartView.as_view(), name='cart-item-delete'),
+    path('cart/clear/', CartView.as_view(), name='clear_cart'),
     path('userprofile/', DetailProfileView.as_view(), name= 'detailView'),
     path('logout/', LogoutView.as_view(), name = 'logout' ),
     path('password-reset/', PasswordResetRequestView.as_view(), name='password_reset_request'),

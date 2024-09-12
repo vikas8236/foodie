@@ -101,18 +101,29 @@ class CartView(APIView):
         ),
         responses={204: 'Deleted'}
     )
-    def delete(self, request, pk):
+    def delete(self, request, pk=None):
         user = request.user
-        try:
-            cart = Cart.objects.get(user=user)
-            cart_item = CartItem.objects.get(cart=cart, id=pk)
-            cart_item.delete()
-            return Response({"detail": "Item removed from cart."}, status=status.HTTP_204_NO_CONTENT)
-        except Cart.DoesNotExist:
-            return Response({"detail": "Cart not found."}, status=status.HTTP_404_NOT_FOUND)
-        except CartItem.DoesNotExist:
-            return Response({"detail": "Item not found in cart."}, status=status.HTTP_404_NOT_FOUND)
-
+        
+        if pk is not None:
+            # Delete a specific item
+            try:
+                cart = Cart.objects.get(user=user)
+                cart_item = CartItem.objects.get(cart=cart, id=pk)
+                cart_item.delete()
+                return Response({"detail": "Item removed from cart."}, status=status.HTTP_204_NO_CONTENT)
+            except Cart.DoesNotExist:
+                return Response({"detail": "Cart not found."}, status=status.HTTP_404_NOT_FOUND)
+            except CartItem.DoesNotExist:
+                return Response({"detail": "Item not found in cart."}, status=status.HTTP_404_NOT_FOUND)
+        
+        else:
+            # Delete all items from the cart
+            try:
+                cart = Cart.objects.get(user=user)
+                CartItem.objects.filter(cart=cart).delete()
+                return Response({"detail": "All items removed from cart."}, status=status.HTTP_204_NO_CONTENT)
+            except Cart.DoesNotExist:
+                return Response({"detail": "Cart not found."}, status=status.HTTP_404_NOT_FOUND)
 # add-to-cart api
 class AddToCartView(APIView):
     authentication_classes = [TokenAuthentication]
